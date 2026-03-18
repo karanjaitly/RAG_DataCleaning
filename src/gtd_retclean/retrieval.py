@@ -4,13 +4,14 @@ from typing import Any
 
 import pandas as pd
 
+from .candidate_pool import build_candidate_pool
 from .config import ColumnConfig, DEFAULT_EMBEDDING_MODEL, FAISS_INDEX_FILE, FAISS_METADATA_FILE
 from .es_indexer import search_by_summary
 from .faiss_indexer import load_faiss_artifacts, search_faiss
 
 
 def _hit_to_record(hit: dict[str, Any]) -> dict[str, Any]:
-    source = hit.get("_source", {})
+    source = dict(hit.get("_source", {}))
     source["score"] = float(hit.get("_score", 0.0))
     return source
 
@@ -22,6 +23,7 @@ def run_combined_retrieval(
     top_k: int = 3,
     model_name: str = DEFAULT_EMBEDDING_MODEL,
     use_elasticsearch: bool = True,
+    candidate_pool_size: int | None = None,
 ) -> list[dict[str, Any]]:
     """Run lexical + vector retrieval for unknown attacks.
 
@@ -46,6 +48,7 @@ def run_combined_retrieval(
         if use_elasticsearch:
             es_hits = search_by_summary(es_client, es_index_name, query_text, top_k=top_k)
 
+        es_records = [_hit_to_record(hit) for hit in es_hits]
         vec_hits = search_faiss(
             query_text=query_text,
             index=index,
@@ -53,13 +56,19 @@ def run_combined_retrieval(
             model_name=model_name,
             top_k=top_k,
         )
+        candidate_pool = build_candidate_pool(
+            es_candidates=es_records,
+            faiss_candidates=vec_hits,
+            candidate_pool_size=candidate_pool_size,
+        )
 
         outputs.append(
             {
                 "eventid": row.get(cols.event_id),
                 "query_summary": query_text,
-                "es_candidates": [_hit_to_record(hit) for hit in es_hits],
+                "es_candidates": es_records,
                 "faiss_candidates": vec_hits,
+                "candidate_pool": candidate_pool,
                 "mode": "hybrid" if use_elasticsearch else "faiss_only",
             }
         )
