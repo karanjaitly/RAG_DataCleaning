@@ -13,6 +13,8 @@ from .config import (
     FAISS_METADATA_FILE,
     KNOWN_ATTACKS_FILE,
     MILESTONE_REPORT_FILE,
+    REASONED_PREVIEW_FILE,
+    RERANKED_PREVIEW_FILE,
     UNKNOWN_ATTACKS_FILE,
 )
 from .data_prep import load_gtd_data, split_known_unknown
@@ -46,10 +48,12 @@ def verify_previous_work(
     faiss_index_path: Path = FAISS_INDEX_FILE,
     faiss_metadata_path: Path = FAISS_METADATA_FILE,
     retrieval_preview_path: Path | None = None,
+    reranked_preview_path: Path | None = RERANKED_PREVIEW_FILE,
+    reasoned_preview_path: Path | None = REASONED_PREVIEW_FILE,
     check_elasticsearch: bool = False,
     es_host: str = "http://localhost:9200",
 ) -> dict[str, Any]:
-    """Verify weeks 1-4 using reusable checks and existing artifacts."""
+    """Verify milestone artifacts produced through week 8."""
     checks: list[dict[str, Any]] = []
     df = load_gtd_data(data_path)
 
@@ -186,9 +190,69 @@ def verify_previous_work(
             )
         )
 
+    if reranked_preview_path is not None and reranked_preview_path.exists():
+        reranked_payload = json.loads(reranked_preview_path.read_text(encoding="utf-8"))
+        has_reranked_candidates = bool(reranked_payload) and any(
+            item.get("reranked_candidates") and item.get("reranker_method") for item in reranked_payload
+        )
+        checks.append(
+            _make_check(
+                week="5-6",
+                name="reranked_preview",
+                status="passed" if has_reranked_candidates else "failed",
+                details={
+                    "preview_path": str(reranked_preview_path),
+                    "records": int(len(reranked_payload)),
+                },
+            )
+        )
+    else:
+        checks.append(
+            _make_check(
+                week="5-6",
+                name="reranked_preview",
+                status="partial",
+                details={
+                    "preview_path": str(reranked_preview_path) if reranked_preview_path is not None else "",
+                    "message": "No reranked preview was supplied for verification.",
+                },
+            )
+        )
+
+    if reasoned_preview_path is not None and reasoned_preview_path.exists():
+        reasoned_payload = json.loads(reasoned_preview_path.read_text(encoding="utf-8"))
+        has_predictions = bool(reasoned_payload) and any(
+            item.get("predicted_gname") and item.get("matched_candidates") for item in reasoned_payload
+        )
+        checks.append(
+            _make_check(
+                week="7-8",
+                name="reasoner_preview",
+                status="passed" if has_predictions else "failed",
+                details={
+                    "preview_path": str(reasoned_preview_path),
+                    "records": int(len(reasoned_payload)),
+                },
+            )
+        )
+    else:
+        checks.append(
+            _make_check(
+                week="7-8",
+                name="reasoner_preview",
+                status="partial",
+                details={
+                    "preview_path": str(reasoned_preview_path) if reasoned_preview_path is not None else "",
+                    "message": "No reasoner preview was supplied for verification.",
+                },
+            )
+        )
+
     week_statuses = {
         "week_1_2": _week_status(checks, "1-2"),
         "week_3_4": _week_status(checks, "3-4"),
+        "week_5_6": _week_status(checks, "5-6"),
+        "week_7_8": _week_status(checks, "7-8"),
     }
     overall_status = "passed" if all(status == "passed" for status in week_statuses.values()) else "partial"
     return {

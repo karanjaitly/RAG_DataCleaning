@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -11,9 +12,22 @@ from sentence_transformers import SentenceTransformer
 from .config import DEFAULT_EMBEDDING_MODEL
 
 
+@lru_cache(maxsize=4)
+def _load_sentence_transformer(model_name: str) -> SentenceTransformer:
+    model_path = Path(model_name)
+    if model_path.is_absolute() and not model_path.exists():
+        raise FileNotFoundError(
+            f"Embedding model was not found at '{model_path}'. "
+            "Run scripts/download_reasoner_models.py to populate the local model cache."
+        )
+
+    local_files_only = model_path.exists()
+    return SentenceTransformer(model_name, local_files_only=local_files_only)
+
+
 def build_embeddings(texts: list[str], model_name: str = DEFAULT_EMBEDDING_MODEL) -> np.ndarray:
     """Convert summaries into dense vectors for semantic retrieval."""
-    model = SentenceTransformer(model_name)
+    model = _load_sentence_transformer(model_name)
     embeddings = model.encode(
         texts,
         convert_to_numpy=True,
@@ -60,7 +74,7 @@ def search_faiss(
     top_k: int = 5,
 ) -> list[dict[str, Any]]:
     """Run vector similarity search and return top matching records."""
-    model = SentenceTransformer(model_name)
+    model = _load_sentence_transformer(model_name)
     q = model.encode([query_text], convert_to_numpy=True, normalize_embeddings=True)
     distances, ids = index.search(q.astype("float32"), top_k)
 

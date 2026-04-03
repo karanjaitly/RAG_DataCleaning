@@ -8,6 +8,7 @@ __all__ = [
     "es_indexer",
     "faiss_indexer",
     "milestones",
+    "reasoner",
     "retrieval",
     "reranker",
     "serialization",

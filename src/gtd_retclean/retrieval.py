@@ -16,6 +16,11 @@ def _hit_to_record(hit: dict[str, Any]) -> dict[str, Any]:
     return source
 
 
+def _row_to_record(row: pd.Series) -> dict[str, Any]:
+    record = row.to_dict()
+    return {key: (None if pd.isna(value) else value) for key, value in record.items()}
+
+
 def run_combined_retrieval(
     query_df: pd.DataFrame,
     es_client=None,
@@ -66,6 +71,7 @@ def run_combined_retrieval(
             {
                 "eventid": row.get(cols.event_id),
                 "query_summary": query_text,
+                "query_record": _row_to_record(row),
                 "es_candidates": es_records,
                 "faiss_candidates": vec_hits,
                 "candidate_pool": candidate_pool,

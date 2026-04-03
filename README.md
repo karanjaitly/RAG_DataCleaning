@@ -1,10 +1,11 @@
-# GTD RetClean (Weeks 1-6)
+# GTD RetClean (Weeks 1-8)
 
-This repository now covers the first three proposal milestones:
+This repository now covers the first four proposal milestones:
 
 1. Week 1-2 EDA: profile GTD missingness and summarize the unknown `gname` population.
 2. Week 3-4 tuple-based indexing: split known vs. unknown attacks, then build Elasticsearch and Faiss retrieval layers.
 3. Week 5-6 reranking: merge lexical/vector candidates and rerank them with a ColBERT-style late interaction module.
+4. Week 7-8 reasoner: evaluate reranked candidate tuples with a local matcher/extractor stack and infer the missing `gname`.
 
 ## Project Structure
 
@@ -22,9 +23,15 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
+Download the local model cache used by retrieval and the week 7-8 reasoner:
+
+```bash
+python scripts/download_reasoner_models.py
+```
+
 Start Elasticsearch locally (default expected at `http://localhost:9200`).
 
-## Run Weeks 1-6 Pipeline
+## Run Weeks 1-8 Pipeline
 
 Week 1-2 EDA:
 
@@ -61,6 +68,24 @@ Rerank a previously saved retrieval file:
 python scripts/05_rerank_candidates.py --retrieval-path outputs/retrieval_preview.json --backend token_overlap
 ```
 
+Week 7-8 reasoner smoke test:
+
+```bash
+python scripts/07_reason_about_candidates.py --reranked-path outputs/reranked_preview.json --limit 1 --save-every 1
+```
+
+Week 7-8 full local-model reasoner run:
+
+```bash
+python scripts/07_reason_about_candidates.py --reranked-path outputs/reranked_preview.json --save-every 1
+```
+
+Resume an interrupted reasoner run:
+
+```bash
+python scripts/07_reason_about_candidates.py --reranked-path outputs/reranked_preview.json --resume --save-every 1
+```
+
 Verify previous milestones:
 
 ```bash
@@ -75,6 +100,7 @@ Outputs:
 - `outputs/unknown_attacks.csv`
 - `outputs/retrieval_preview.json`
 - `outputs/reranked_preview.json`
+- `outputs/reasoned_preview.json`
 - `outputs/milestone_verification.json`
 - `indices/gtd_summary_faiss.index`
 - `indices/gtd_summary_faiss_metadata.csv`
@@ -82,4 +108,6 @@ Outputs:
 ## Notes
 
 - The reranker is modular: it currently supports a ColBERT-style `late_interaction` backend and a lightweight `token_overlap` fallback for offline checks.
-- Future week 7-8 reasoner work can consume `candidate_pool` or `reranked_candidates` directly without changing the retrieval scripts.
+- The practical week 7-8 default stack is a local `cross-encoder/ms-marco-MiniLM-L-6-v2` matcher plus a local `TinyLlama/TinyLlama-1.1B-Chat-v1.0` extractor cached under `.cache/hf_models/`.
+- The reasoner script now supports `--limit`, `--start-index`, `--save-every`, and `--resume` so testing can use small smoke runs before expensive full-batch evaluation.
+- Unit tests validate local pipeline logic, scoring behavior, serialization, and model integration boundaries, but they do not replace a practical end-to-end run on real GTD rows.
