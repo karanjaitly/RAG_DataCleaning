@@ -19,6 +19,8 @@ RETRIEVAL_PREVIEW_FILE = OUTPUTS_DIR / "retrieval_preview.json"
 RERANKED_PREVIEW_FILE = OUTPUTS_DIR / "reranked_preview.json"
 REASONED_PREVIEW_FILE = OUTPUTS_DIR / "reasoned_preview.json"
 MILESTONE_REPORT_FILE = OUTPUTS_DIR / "milestone_verification.json"
+EVALUATION_PREDICTIONS_FILE = OUTPUTS_DIR / "evaluation_predictions.json"
+EVALUATION_SUMMARY_FILE = OUTPUTS_DIR / "evaluation_summary.json"
 
 FAISS_INDEX_FILE = INDICES_DIR / "gtd_summary_faiss.index"
 FAISS_METADATA_FILE = INDICES_DIR / "gtd_summary_faiss_metadata.csv"

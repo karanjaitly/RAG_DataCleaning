@@ -5,6 +5,7 @@ __all__ = [
     "config",
     "data_prep",
     "eda",
+    "evaluation",
     "es_indexer",
     "faiss_indexer",
     "milestones",

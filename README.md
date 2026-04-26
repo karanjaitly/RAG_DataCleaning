@@ -6,6 +6,7 @@ This repository now covers the first four proposal milestones:
 2. Week 3-4 tuple-based indexing: split known vs. unknown attacks, then build Elasticsearch and Faiss retrieval layers.
 3. Week 5-6 reranking: merge lexical/vector candidates and rerank them with a ColBERT-style late interaction module.
 4. Week 7-8 reasoner: evaluate reranked candidate tuples with a local matcher/extractor stack and infer the missing `gname`.
+5. Week 9-10 evaluation: hold out known incidents, run the Faiss-only pipeline end to end, and compare against a majority-class baseline.
 
 ## Project Structure
 
@@ -86,6 +87,18 @@ Resume an interrupted reasoner run:
 python scripts/07_reason_about_candidates.py --reranked-path outputs/reranked_preview.json --resume --save-every 1
 ```
 
+Week 9-10 evaluation on a practical validation sample:
+
+```bash
+python scripts/08_evaluate_pipeline.py --sample-size 100 --save-every 1
+```
+
+Fast smoke test of the evaluation flow:
+
+```bash
+python scripts/08_evaluate_pipeline.py --sample-size 10 --reranker-backend token_overlap --matcher-backend field_weighted --extractor-backend group_vote
+```
+
 Verify previous milestones:
 
 ```bash
@@ -102,6 +115,8 @@ Outputs:
 - `outputs/reranked_preview.json`
 - `outputs/reasoned_preview.json`
 - `outputs/milestone_verification.json`
+- `outputs/evaluation_predictions.json`
+- `outputs/evaluation_summary.json`
 - `indices/gtd_summary_faiss.index`
 - `indices/gtd_summary_faiss_metadata.csv`
 
@@ -110,4 +125,6 @@ Outputs:
 - The reranker is modular: it currently supports a ColBERT-style `late_interaction` backend and a lightweight `token_overlap` fallback for offline checks.
 - The practical week 7-8 default stack is a local `cross-encoder/ms-marco-MiniLM-L-6-v2` matcher plus a local `TinyLlama/TinyLlama-1.1B-Chat-v1.0` extractor cached under `.cache/hf_models/`.
 - The reasoner script now supports `--limit`, `--start-index`, `--save-every`, and `--resume` so testing can use small smoke runs before expensive full-batch evaluation.
+- The evaluation script rebuilds a temporary Faiss index from the training split only, so held-out validation incidents do not leak back into retrieval.
+- The evaluation defaults to a sample-sized validation run and can trim the sample further if projected local-model runtime exceeds the configured budget.
 - Unit tests validate local pipeline logic, scoring behavior, serialization, and model integration boundaries, but they do not replace a practical end-to-end run on real GTD rows.
