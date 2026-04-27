@@ -1,0 +1,94 @@
+{
+  "status": "completed_sampled",
+  "config": {
+    "mode": "faiss_only",
+    "random_seed": 42,
+    "validation_fraction": 0.2,
+    "min_group_count": 2,
+    "sample_size": 5,
+    "retrieval_top_k": 5,
+    "candidate_pool_size": 8,
+    "rerank_top_k": 3,
+    "candidate_limit": 5,
+    "embedding_model_name": "C:\\Users\\kjait\\Downloads\\RAG_DataCleaning\\.cache\\hf_models\\sentence-transformers-all-MiniLM-L6-v2",
+    "reranker_backend": "late_interaction",
+    "matcher_backend": "cross_encoder_matcher",
+    "extractor_backend": "llama_extractor",
+    "runtime_budget_minutes": 4.0
+  },
+  "split": {
+    "known_rows": 3191,
+    "eligible_groups_for_validation": 117,
+    "excluded_groups_from_validation": 79,
+    "eligible_validation_rows_before_cap": 650,
+    "excluded_validation_rows": 79,
+    "training_rows": 3186,
+    "validation_rows": 3,
+    "validation_fraction": 0.2,
+    "min_group_count": 2,
+    "sample_capped": true,
+    "max_validation_rows": 5
+  },
+  "label_distribution": {
+    "train_rows": 3186,
+    "validation_rows": 3,
+    "train_unique_groups": 196,
+    "validation_unique_groups": 3,
+    "majority_gname": "Taliban",
+    "majority_rate": 0.29912115505335846
+  },
+  "metrics": {
+    "pipeline": {
+      "rows": 3,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "covered_accuracy": 1.0,
+      "macro_f1": 1.0
+    },
+    "majority_baseline": {
+      "rows": 3,
+      "accuracy": 0.3333333333333333,
+      "coverage": 1.0,
+      "covered_accuracy": 0.3333333333333333,
+      "macro_f1": 0.16666666666666666,
+      "predicted_gname": "Taliban"
+    },
+    "accuracy_lift": 0.6666666666666667
+  },
+  "runtime": {
+    "status": "completed_sampled",
+    "elapsed_seconds": 307.8929831000278,
+    "elapsed_minutes": 5.131549718333797,
+    "requested_validation_rows": 5,
+    "evaluated_rows": 3,
+    "already_completed_rows": 0,
+    "processed_this_run": 3,
+    "budget_trimmed": true
+  },
+  "examples": {
+    "correct": [
+      {
+        "eventid": 202101270025,
+        "actual_gname": "Islamic State of Iraq and the Levant (ISIL)",
+        "predicted_gname": "Islamic State of Iraq and the Levant (ISIL)",
+        "confidence_label": "high",
+        "is_correct": true
+      },
+      {
+        "eventid": 202106260023,
+        "actual_gname": "Boko Haram",
+        "predicted_gname": "Boko Haram",
+        "confidence_label": "medium",
+        "is_correct": true
+      },
+      {
+        "eventid": 202103090005,
+        "actual_gname": "Taliban",
+        "predicted_gname": "Taliban",
+        "confidence_label": "high",
+        "is_correct": true
+      }
+    ],
+    "incorrect": []
+  }
+}

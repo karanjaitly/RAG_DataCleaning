@@ -1,0 +1,116 @@
+{
+  "status": "completed",
+  "config": {
+    "mode": "faiss_only",
+    "random_seed": 42,
+    "validation_fraction": 0.2,
+    "min_group_count": 2,
+    "sample_size": null,
+    "retrieval_top_k": 5,
+    "candidate_pool_size": 8,
+    "rerank_top_k": 3,
+    "candidate_limit": 5,
+    "embedding_model_name": "C:\\Users\\kjait\\Downloads\\RAG_DataCleaning\\.cache\\hf_models\\sentence-transformers-all-MiniLM-L6-v2",
+    "reranker_backend": "late_interaction",
+    "matcher_backend": "cross_encoder_matcher",
+    "extractor_backend": "group_vote",
+    "runtime_budget_minutes": 10.0
+  },
+  "split": {
+    "known_rows": 3191,
+    "eligible_groups_for_validation": 117,
+    "excluded_groups_from_validation": 79,
+    "eligible_validation_rows_before_cap": 650,
+    "excluded_validation_rows": 79,
+    "training_rows": 2541,
+    "validation_rows": 650,
+    "validation_fraction": 0.2,
+    "min_group_count": 2,
+    "sample_capped": false,
+    "max_validation_rows": null
+  },
+  "label_distribution": {
+    "train_rows": 2541,
+    "validation_rows": 650,
+    "train_unique_groups": 196,
+    "validation_unique_groups": 117,
+    "majority_gname": "Taliban",
+    "majority_rate": 0.3002754820936639
+  },
+  "metrics": {
+    "pipeline": {
+      "rows": 650,
+      "accuracy": 0.8676923076923077,
+      "coverage": 1.0,
+      "covered_accuracy": 0.8676923076923077,
+      "macro_f1": 0.5564364059164333
+    },
+    "majority_baseline": {
+      "rows": 650,
+      "accuracy": 0.29384615384615387,
+      "coverage": 1.0,
+      "covered_accuracy": 0.29384615384615387,
+      "macro_f1": 0.003882232181875464,
+      "predicted_gname": "Taliban"
+    },
+    "accuracy_lift": 0.5738461538461538
+  },
+  "runtime": {
+    "status": "completed",
+    "elapsed_seconds": 211.54223730001831,
+    "elapsed_minutes": 3.525703955000305,
+    "requested_validation_rows": 650,
+    "evaluated_rows": 650,
+    "already_completed_rows": 0,
+    "processed_this_run": 650,
+    "budget_trimmed": false
+  },
+  "examples": {
+    "correct": [
+      {
+        "eventid": 202106260023,
+        "actual_gname": "Boko Haram",
+        "predicted_gname": "Boko Haram",
+        "confidence_label": "medium",
+        "is_correct": true
+      },
+      {
+        "eventid": 202101270025,
+        "actual_gname": "Islamic State of Iraq and the Levant (ISIL)",
+        "predicted_gname": "Islamic State of Iraq and the Levant (ISIL)",
+        "confidence_label": "high",
+        "is_correct": true
+      },
+      {
+        "eventid": 202104200020,
+        "actual_gname": "Patriotic and Integrationist Forces of the Congo (FPIC)",
+        "predicted_gname": "Patriotic and Integrationist Forces of the Congo (FPIC)",
+        "confidence_label": "high",
+        "is_correct": true
+      }
+    ],
+    "incorrect": [
+      {
+        "eventid": 202102090005,
+        "actual_gname": "Sinai Province of the Islamic State",
+        "predicted_gname": "Islamic State of Iraq and the Levant (ISIL)",
+        "confidence_label": "medium",
+        "is_correct": false
+      },
+      {
+        "eventid": 202106180050,
+        "actual_gname": "Separatists",
+        "predicted_gname": "Boko Haram",
+        "confidence_label": "medium",
+        "is_correct": false
+      },
+      {
+        "eventid": 202103290014,
+        "actual_gname": "Iran-backed militia",
+        "predicted_gname": "Kurdistan Workers' Party (PKK)",
+        "confidence_label": "medium",
+        "is_correct": false
+      }
+    ]
+  }
+}
