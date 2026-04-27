@@ -1,0 +1,61 @@
+{
+  "row_count": 4960,
+  "column_count": 135,
+  "non_empty_summary_rows": 4960,
+  "known_attack_rows": 3191,
+  "unknown_attack_rows": 1769,
+  "gname_unknown_rate": 0.3566532258064516,
+  "columns_with_missing_values": 93,
+  "top_missing_columns": [
+    {
+      "column": "gsubname3",
+      "missing_count": 4960,
+      "missing_rate": 1.0
+    },
+    {
+      "column": "weapsubtype4",
+      "missing_count": 4960,
+      "missing_rate": 1.0
+    },
+    {
+      "column": "weapsubtype4_txt",
+      "missing_count": 4960,
+      "missing_rate": 1.0
+    },
+    {
+      "column": "weaptype4",
+      "missing_count": 4960,
+      "missing_rate": 1.0
+    },
+    {
+      "column": "weaptype4_txt",
+      "missing_count": 4960,
+      "missing_rate": 1.0
+    },
+    {
+      "column": "claimmode3",
+      "missing_count": 4959,
+      "missing_rate": 0.9997983870967742
+    },
+    {
+      "column": "claimmode3_txt",
+      "missing_count": 4959,
+      "missing_rate": 0.9997983870967742
+    },
+    {
+      "column": "divert",
+      "missing_count": 4959,
+      "missing_rate": 0.9997983870967742
+    },
+    {
+      "column": "kidhijcountry",
+      "missing_count": 4959,
+      "missing_rate": 0.9997983870967742
+    },
+    {
+      "column": "claimmode2",
+      "missing_count": 4953,
+      "missing_rate": 0.9985887096774193
+    }
+  ]
+}

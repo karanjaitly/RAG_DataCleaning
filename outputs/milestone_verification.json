@@ -1,0 +1,78 @@
+{
+  "overall_status": "partial",
+  "weeks": {
+    "week_1_2": "passed",
+    "week_3_4": "partial",
+    "week_5_6": "passed",
+    "week_7_8": "passed"
+  },
+  "checks": [
+    {
+      "week": "1-2",
+      "name": "dataset_eda_profile",
+      "status": "passed",
+      "details": {
+        "rows": 4960,
+        "columns": 135,
+        "eda_summary_path": "C:\\Users\\kjait\\Downloads\\RAG_DataCleaning\\outputs\\eda_summary.json",
+        "missing_profile_path": "C:\\Users\\kjait\\Downloads\\RAG_DataCleaning\\outputs\\missing_value_profile.csv"
+      }
+    },
+    {
+      "week": "3-4",
+      "name": "split_outputs",
+      "status": "passed",
+      "details": {
+        "known_rows_expected": 3191,
+        "known_rows_found": 3191,
+        "unknown_rows_expected": 1769,
+        "unknown_rows_found": 1769
+      }
+    },
+    {
+      "week": "3-4",
+      "name": "faiss_artifacts",
+      "status": "passed",
+      "details": {
+        "faiss_ntotal": 3191,
+        "metadata_rows": 3191,
+        "expected_known_rows": 3191
+      }
+    },
+    {
+      "week": "3-4",
+      "name": "retrieval_preview",
+      "status": "passed",
+      "details": {
+        "preview_path": "outputs\\retrieval_preview.json",
+        "records": 10
+      }
+    },
+    {
+      "week": "3-4",
+      "name": "elasticsearch_health",
+      "status": "skipped",
+      "details": {
+        "message": "Skipped live Elasticsearch verification."
+      }
+    },
+    {
+      "week": "5-6",
+      "name": "reranked_preview",
+      "status": "passed",
+      "details": {
+        "preview_path": "outputs\\reranked_preview.json",
+        "records": 10
+      }
+    },
+    {
+      "week": "7-8",
+      "name": "reasoner_preview",
+      "status": "passed",
+      "details": {
+        "preview_path": "outputs\\reasoned_preview.json",
+        "records": 1
+      }
+    }
+  ]
+}

@@ -213,3 +213,9 @@ indices/*
 !indices/.gitkeep
 outputs/*
 !outputs/.gitkeep
+
+# Compact report artifacts
+!outputs/*summary*.json
+!outputs/*preview*.json
+!outputs/milestone_verification.json
+!outputs/missing_value_profile.csv
